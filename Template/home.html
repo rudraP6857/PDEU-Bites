@@ -1,0 +1,539 @@
+{% extends "base.html" %}
+{% block home_status %}active{% endblock home_status %}
+{% load static %}
+
+{% block slider %}
+<style>
+  /* ── HERO ── */
+  .slider_section { min-height: 92vh; display: flex; align-items: center; position: relative; }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,190,51,0.15); border: 1px solid rgba(255,190,51,0.4);
+    color: #ffbe33; border-radius: 25px; padding: 6px 16px; font-size: 0.82rem;
+    font-weight: 700; margin-bottom: 20px; animation: fadeUp 0.6s both;
+  }
+  .hero-badge .dot { width:8px; height:8px; border-radius:50%; background:#ffbe33; animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+  .hero-title { font-size: clamp(2.2rem,5vw,3.8rem); font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 18px; animation: fadeUp 0.7s 0.15s both; }
+  .hero-title span { color: #ffbe33; }
+  .hero-desc { color: #ccd6f6; font-size: 1.05rem; line-height: 1.7; max-width: 500px; margin-bottom: 32px; animation: fadeUp 0.7s 0.3s both; }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp 0.7s 0.45s both; }
+  .hero-btn-primary {
+    background: linear-gradient(135deg,#ffbe33,#ff8c00); border: none; border-radius: 30px;
+    padding: 14px 30px; font-weight: 800; color: #1a1a2e; font-size: 1rem; cursor: pointer;
+    transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .hero-btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,190,51,0.5); color: #1a1a2e; }
+  .hero-btn-outline {
+    background: transparent; border: 2px solid rgba(255,255,255,0.4); border-radius: 30px;
+    padding: 14px 30px; font-weight: 700; color: #fff; font-size: 1rem;
+    transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .hero-btn-outline:hover { border-color: #ffbe33; color: #ffbe33; }
+  .hero-stats { display: flex; gap: 30px; margin-top: 40px; animation: fadeUp 0.7s 0.55s both; }
+  .hero-stat h4 { color: #ffbe33; font-size: 1.8rem; font-weight: 800; margin: 0; }
+  .hero-stat p { color: #8892b0; font-size: 0.82rem; margin: 0; }
+  .carousel-indicators { display: none; }
+</style>
+
+<section class="slider_section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-7 hero-content">
+        <div class="hero-badge"><div class="dot"></div> Now Open in Gandhinagar</div>
+        <h1 class="hero-title">Best Food Near <span>PDEU</span>, Gandhinagar</h1>
+        <p class="hero-desc">Serving students and professionals near PDEU with fresh burgers, pizzas, and quick meals. Every bite is made with love and the best ingredients.</p>
+        <div class="hero-btns">
+          <a href="{% url 'Menu' %}" class="hero-btn-primary"><i class="fa fa-cutlery"></i> Explore Menu</a>
+          <a href="{% url 'Book_Table' %}" class="hero-btn-outline"><i class="fa fa-calendar"></i> Book a Table</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><h4>500+</h4><p>Happy Customers</p></div>
+          <div class="hero-stat"><h4>15+</h4><p>Menu Items</p></div>
+          <div class="hero-stat"><h4>4.8★</h4><p>Average Rating</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock slider %}
+
+{% block main %}
+<style>
+  /* ── FEATURES STRIP ── */
+  .features-strip { background: linear-gradient(135deg,#1a1a2e,#16213e); padding: 28px 0; }
+  .feature-item { display: flex; align-items: center; gap: 12px; }
+  .feature-item i { font-size: 1.4rem; color: #ffbe33; }
+  .feature-item h6 { color: #fff; font-weight: 700; margin: 0; font-size: 0.9rem; }
+  .feature-item p { color: #8892b0; margin: 0; font-size: 0.78rem; }
+  .feature-divider { border-left: 1px solid rgba(255,255,255,0.08); height: 50px; }
+
+  /* ── OFFERS ── */
+  .offer_section { padding: 70px 0; background: #fff; }
+  .section-eyebrow { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #ffbe33; margin-bottom: 6px; }
+  .section-h2 { font-size: 2.2rem; font-weight: 800; color: #1a1a2e; margin-bottom: 40px; }
+  .offer-card {
+    border-radius: 20px; overflow: hidden; position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: 0.3s;
+  }
+  .offer-card:hover { transform: translateY(-6px); box-shadow: 0 20px 45px rgba(0,0,0,0.15); }
+  .offer-card img { width: 100%; height: 280px; object-fit: cover; display: block; transition: transform 0.4s; }
+  .offer-card:hover img { transform: scale(1.05); }
+  .offer-card-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(0deg, rgba(26,26,46,0.95) 0%, transparent 100%);
+    padding: 30px 24px 24px;
+  }
+  .offer-card-overlay h5 { color: #fff; font-weight: 800; font-size: 1.3rem; margin-bottom: 4px; }
+  .offer-card-overlay .badge-off { background: #ffbe33; color: #1a1a2e; border-radius: 20px; padding: 3px 12px; font-size: 0.82rem; font-weight: 800; margin-bottom: 10px; display: inline-block; }
+  .offer-card-overlay a { background: linear-gradient(135deg,#ffbe33,#ff8c00); border: none; border-radius: 25px; padding: 8px 20px; font-weight: 700; color: #1a1a2e; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
+  .offer-card-overlay a:hover { transform: scale(1.05); }
+
+  /* ── MENU PREVIEW ── */
+  .food_section { padding: 70px 0; background: linear-gradient(135deg,#f8f9fa,#fff); }
+  .filters_menu { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 40px; }
+  .filters_menu li {
+    padding: 8px 22px; border-radius: 25px; border: 1.5px solid #e2e8f0;
+    cursor: pointer; font-weight: 600; font-size: 0.88rem; color: #555; transition: 0.25s; background: #fff;
+  }
+  .filters_menu li:hover, .filters_menu li.active { background: linear-gradient(135deg,#ffbe33,#ff8c00); border-color: transparent; color: #1a1a2e; }
+  .menu-card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.06); transition: 0.3s; height: 100%; display: flex; flex-direction: column; }
+  .menu-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
+  .menu-card .img-box { overflow: hidden; height: 190px; position: relative; }
+  .menu-card .img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .menu-card:hover .img-box img { transform: scale(1.08); }
+  .menu-card .badge-cat { position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg,#ffbe33,#ff8c00); color: #1a1a2e; padding: 3px 10px; border-radius: 15px; font-size: 0.72rem; font-weight: 700; }
+  .menu-card .card-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; }
+  .menu-card .card-body h5 { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+  .menu-card .card-body p { font-size: 0.82rem; color: #8892b0; flex-grow: 1; margin-bottom: 12px; line-height: 1.5; }
+  .menu-card .card-footer-row { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+  .menu-card .price { font-size: 1.2rem; font-weight: 800; color: #1a1a2e; }
+  .btn-add-home { background: linear-gradient(135deg,#ffbe33,#ff8c00); border: none; border-radius: 20px; padding: 7px 16px; font-weight: 700; font-size: 0.82rem; color: #1a1a2e; cursor: pointer; transition: 0.2s; }
+  .btn-add-home:hover { transform: scale(1.05); }
+  .col-card { margin-bottom: 24px; }
+  .view-more-btn { background: transparent; border: 2px solid #1a1a2e; border-radius: 30px; padding: 12px 32px; font-weight: 700; color: #1a1a2e; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .view-more-btn:hover { background: #1a1a2e; color: #ffbe33; }
+
+  /* ── BOOK + MAP ── */
+  .book_section { padding: 70px 0; background: #fff; }
+  .book-form-wrap {
+    background: linear-gradient(135deg,#1a1a2e,#16213e);
+    border-radius: 20px; padding: 40px;
+  }
+  .book-form-wrap .bfw-title { color: #ffbe33; font-weight: 800; font-size: 1.8rem; margin-bottom: 4px; }
+  .book-form-wrap .bfw-sub { color: #8892b0; margin-bottom: 18px; font-size: 0.92rem; }
+
+  /* Amenity chips */
+  .bfw-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .bfw-chip {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 5px 13px; font-size: 0.78rem; color: #ccd6f6;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .bfw-chip i { color: #ffbe33; }
+
+  /* Form fields */
+  .bfw-field { margin-bottom: 14px; }
+  .bfw-field label {
+    display: block; font-weight: 600; font-size: 0.82rem;
+    color: #8892b0; margin-bottom: 5px;
+  }
+  .bfw-field label i { color: #ffbe33; margin-right: 4px; }
+  .bfw-field input,
+  .bfw-field select,
+  .bfw-field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 11px 14px; color: #fff;
+    font-family: 'Outfit',sans-serif; font-size: 0.9rem;
+    outline: none; transition: 0.2s; resize: none;
+  }
+  .bfw-field input::placeholder,
+  .bfw-field textarea::placeholder { color: #8892b0; }
+  .bfw-field input:focus,
+  .bfw-field select:focus,
+  .bfw-field textarea:focus { border-color: #ffbe33; background: rgba(255,190,51,0.06); }
+  .bfw-field select option { color: #1a1a2e; }
+  .bfw-field small { font-size: 0.75rem; color: #6a7490; margin-top: 3px; display: block; }
+  .bfw-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .btn-book-home {
+    width: 100%; padding: 14px; border: none; border-radius: 30px;
+    background: linear-gradient(135deg,#ffbe33,#ff8c00); color: #1a1a2e;
+    font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s;
+    margin-top: 6px;
+  }
+  .btn-book-home:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,190,51,0.4); }
+  .btn-book-home:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .map-embed-wrap { border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.12); height: 100%; min-height: 460px; position: relative; }
+  .map-embed-wrap iframe { width: 100%; height: 100%; min-height: 460px; border: none; }
+  .map-info-chip {
+    position: absolute; bottom: 20px; left: 16px; right: 16px;
+    background: rgba(26,26,46,0.92); backdrop-filter: blur(8px);
+    border-radius: 12px; padding: 14px 18px; color: #fff;
+    border: 1px solid rgba(255,190,51,0.3);
+  }
+  .map-info-chip strong { color: #ffbe33; display: block; font-size: 0.92rem; margin-bottom: 2px; }
+  .map-info-chip span { font-size: 0.8rem; color: #ccd6f6; }
+
+  @media (max-width: 767px) {
+    .bfw-row2 { grid-template-columns: 1fr; gap: 0; }
+  }
+
+  /* ── REVIEWS ── */
+  .client_section { padding: 70px 0; background: linear-gradient(135deg,#1a1a2e,#16213e); }
+  .client_section .section-h2 { color: #fff; }
+  .review-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 28px; height: 100%; }
+  .review-card p { color: #ccd6f6; font-size: 0.93rem; line-height: 1.7; font-style: italic; margin-bottom: 20px; }
+  .review-card .reviewer { display: flex; align-items: center; gap: 12px; }
+  .review-card .reviewer img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #ffbe33; }
+  .review-card .reviewer .initials { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg,#ffbe33,#ff8c00); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #1a1a2e; font-size: 1.1rem; }
+  .review-card .reviewer h6 { color: #fff; font-weight: 700; margin: 0; font-size: 0.92rem; }
+  .review-card .stars { color: #ffbe33; font-size: 0.82rem; }
+  .review-card .reviewer p { color: #8892b0; margin: 0; font-size: 0.78rem; font-style: normal; }
+  .no-reviews { text-align: center; color: #8892b0; padding: 30px; }
+</style>
+
+<!-- Features Strip -->
+<div class="features-strip">
+  <div class="container">
+    <div class="row justify-content-around align-items-center text-center text-md-left">
+      <div class="col-6 col-md-3 mb-3 mb-md-0">
+        <div class="feature-item justify-content-center justify-content-md-start">
+          <i class="fa fa-motorcycle"></i>
+          <div><h6>Free Delivery</h6><p>Within 5 km area</p></div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 mb-3 mb-md-0">
+        <div class="feature-item justify-content-center justify-content-md-start">
+          <i class="fa fa-leaf"></i>
+          <div><h6>Fresh Ingredients</h6><p>Daily sourced produce</p></div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="feature-item justify-content-center justify-content-md-start">
+          <i class="fa fa-shield"></i>
+          <div><h6>Hygienic Kitchen</h6><p>FSSAI certified</p></div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="feature-item justify-content-center justify-content-md-start">
+          <i class="fa fa-star"></i>
+          <div><h6>4.8★ Rated</h6><p>500+ happy guests</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Offers Section -->
+<section class="offer_section">
+  <div class="container">
+    <div class="text-center">
+      <p class="section-eyebrow">Limited Time</p>
+      <h2 class="section-h2">Today's Special Offers</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="offer-card">
+          <img src="{% static 'images/o1.jpg' %}" alt="Tasty Thursdays">
+          <div class="offer-card-overlay">
+            <h5>Tasty Mondays</h5>
+            <div class="badge-off">20% OFF</div>
+            <a href="{% url 'Menu' %}"><i class="fa fa-shopping-cart"></i> Order Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-4">
+        <div class="offer-card">
+          <img src="{% static 'images/o2.jpg' %}" alt="Pizza Days">
+          <div class="offer-card-overlay">
+            <h5>Burger Days</h5>
+            <div class="badge-off">15% OFF</div>
+            <a href="{% url 'Menu' %}"><i class="fa fa-shopping-cart"></i> Order Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Menu Preview Section -->
+<section class="food_section">
+  <div class="container">
+    <div class="text-center">
+      <p class="section-eyebrow">Explore</p>
+      <h2 class="section-h2">Our Menu</h2>
+    </div>
+
+    <ul class="filters_menu">
+      <li class="active" data-filter="*">All</li>
+      {% for i in list %}
+      <li data-filter=".{{ i.Category_name }}">{{ i.Category_name }}</li>
+      {% endfor %}
+    </ul>
+
+    <div class="filters-content">
+      <div class="row grid">
+        {% for j in items %}
+        <div class="col-sm-6 col-lg-4 col-card all {{ j.Category.Category_name  }}">
+          <div class="menu-card">
+            <div class="img-box">
+              <img src="/media/{{ j.Image }}" alt="{{ j.Item_name }}" loading="lazy">
+              <span class="badge-cat">{{ j.Category }}</span>
+            </div>
+            <div class="card-body">
+              <h5>{{ j.Item_name }}</h5>
+              <p>{{ j.description }}</p>
+              <div class="card-footer-row">
+                <div class="price">₹{{ j.Price }}</div>
+                {% if user.is_authenticated %}
+                <button class="btn-add-home add-to-cart" data-item-id="{{ j.id }}" data-item-name="{{ j.Item_name }}" data-item-price="{{ j.Price }}">
+                  <i class="fa fa-plus"></i> Add
+                </button>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn-add-home" style="text-decoration:none; font-size:0.82rem;"><i class="fa fa-lock"></i> Login</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{% url 'Menu' %}" class="view-more-btn"><i class="fa fa-cutlery"></i> View Full Menu</a>
+    </div>
+  </div>
+</section>
+
+<!-- Book Table + Google Map -->
+<section class="book_section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow">Reservations</p>
+      <h2 class="section-h2">Book A Table</h2>
+    </div>
+    <div class="row align-items-stretch">
+      <div class="col-lg-5 mb-4">
+        <div class="book-form-wrap h-100">
+          <p class="bfw-title">Reserve Your Spot</p>
+          <p class="bfw-sub">Fill in the details and we'll confirm your reservation instantly.</p>
+
+          <div class="bfw-chips">
+            <span class="bfw-chip"><i class="fa fa-wifi"></i> Free Wi-Fi</span>
+            <span class="bfw-chip"><i class="fa fa-car"></i> Parking</span>
+            <span class="bfw-chip"><i class="fa fa-snowflake-o"></i> AC Seating</span>
+            <span class="bfw-chip"><i class="fa fa-music"></i> Live Music</span>
+          </div>
+
+          <form action="{% url 'Book_Table' %}" method="POST" id="home-bt-form">{% csrf_token %}
+
+            <div class="bfw-row2">
+              <div class="bfw-field">
+                <label for="hbt_name"><i class="fa fa-user"></i>Full Name *</label>
+                <input type="text" id="hbt_name" name="user_name" required placeholder="Your Name" />
+              </div>
+              <div class="bfw-field">
+                <label for="hbt_phone"><i class="fa fa-phone"></i>Phone *</label>
+                <input type="tel" id="hbt_phone" name="phone_number" required placeholder="10-digit number" maxlength="10" />
+              </div>
+            </div>
+
+            <div class="bfw-field">
+              <label for="hbt_email"><i class="fa fa-envelope"></i>Email Address *</label>
+              <input type="email" id="hbt_email" name="user_email" required placeholder="your@email.com" />
+              <small>Confirmation will be sent to this email</small>
+            </div>
+
+            <div class="bfw-row2">
+              <div class="bfw-field">
+                <label for="hbt_date"><i class="fa fa-calendar"></i>Date *</label>
+                <input type="date" id="hbt_date" name="booking_data" required />
+              </div>
+              <div class="bfw-field">
+                <label for="hbt_time"><i class="fa fa-clock-o"></i>Time</label>
+                <input type="time" id="hbt_time" name="booking_time" />
+              </div>
+            </div>
+
+            <div class="bfw-field">
+              <label for="hbt_guests"><i class="fa fa-users"></i>Number of Guests *</label>
+              <select id="hbt_guests" name="total_person" required>
+                <option value="" disabled selected>Select guests</option>
+                <option value="1">1 Person</option>
+                <option value="2">2 Persons</option>
+                <option value="3">3 Persons</option>
+                <option value="4">4 Persons</option>
+                <option value="5">5 Persons</option>
+                <option value="6">6 Persons</option>
+                <option value="8">8+ Persons (large group)</option>
+              </select>
+            </div>
+
+            <div class="bfw-field">
+              <label for="hbt_request"><i class="fa fa-comment"></i>Special Requests</label>
+              <textarea id="hbt_request" name="special_request" rows="2"
+                placeholder="Allergies, seating preference, occasion…"></textarea>
+            </div>
+
+            <button type="submit" class="btn-book-home" id="home-bt-submit">
+              <i class="fa fa-calendar-check-o" style="margin-right:6px;"></i>Confirm Booking
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-7 mb-4">
+        <div class="map-embed-wrap">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3666.7867685862765!2d72.6636!3d23.1557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2a5699d69a5d%3A0x5adedf24e5c3a5cc!2sPandit%20Deendayal%20Energy%20University!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            title="PDEU Bites — Gandhinagar Location">
+          </iframe>
+          <div class="map-info-chip">
+            <strong><i class="fa fa-map-marker" style="margin-right:5px;"></i>PDEU Bites, Gandhinagar</strong>
+            <span>PDPU Road, Raisan, Gandhinagar, Gujarat — 382355</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Customer Reviews -->
+<section class="client_section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <p class="section-eyebrow" style="color:#8892b0;">Testimonials</p>
+      <h2 class="section-h2">What Our Customers Say</h2>
+    </div>
+    {% if review %}
+    <div class="row">
+      {% for k in review %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="review-card">
+          <div class="stars mb-3">
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter <= k.Rating %}
+              <i class="fa fa-star"></i>
+              {% else %}
+              <i class="fa fa-star-o"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <p>"{{ k.Description }}"</p>
+          <div class="reviewer">
+            {% if k.Image %}
+            <img src="/media/{{ k.Image }}" alt="{{ k.User_name }}">
+            {% else %}
+            <div class="initials">{{ k.User_name|slice:":1"|upper }}</div>
+            {% endif %}
+            <div>
+              <h6>{{ k.User_name }}</h6>
+              <p>{{ k.Rating }}/5 stars</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="{% url 'Feedback_Form' %}" class="hero-btn-outline" style="display:inline-flex;">
+        <i class="fa fa-star"></i> Leave a Review
+      </a>
+    </div>
+    {% else %}
+    <div class="no-reviews">
+      <i class="fa fa-comment-o" style="font-size:2.5rem; display:block; margin-bottom:12px; opacity:0.3;"></i>
+      <p>No reviews yet — be the first to review!</p>
+      <a href="{% url 'Feedback_Form' %}" class="hero-btn-primary" style="display:inline-flex; margin-top:12px;">Give Feedback</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  // Isotope
+  function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    let cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.add-to-cart')) {
+    const btn = e.target.closest('.add-to-cart');
+    const id = btn.getAttribute('data-item-id');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+    fetch('/add-to-cart/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': getCookie('csrftoken')
+      },
+      body: 'item_id=' + id
+    })
+    .then(res => res.json())
+    .then(data => {
+  btn.disabled = false;
+
+  if (data.message) {
+    btn.innerHTML = '<i class="fa fa-check"></i> Added';
+    showToast('Item added to cart 🛒');
+  } else {
+    btn.innerHTML = '<i class="fa fa-plus"></i> Add';
+    showToast('Something went wrong', 'error');
+  }
+
+  setTimeout(() => {
+    btn.innerHTML = '<i class="fa fa-plus"></i> Add';
+  }, 1500);
+})
+
+    .catch(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-plus"></i> Add';
+    });
+  }
+});
+
+  // Set min date on home book form
+  var dateEl = document.getElementById('hbt_date');
+  if (dateEl) dateEl.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+  // Submit loading state
+  var homeBtForm = document.getElementById('home-bt-form');
+  if (homeBtForm) {
+    homeBtForm.addEventListener('submit', function() {
+      var btn = document.getElementById('home-bt-submit');
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:6px;"></i>Booking…';
+      btn.disabled = true;
+    });
+  }
+
+  $(document).ready(function() {
+    var $grid = $('.grid').isotope({ itemSelector: '.col-card', layoutMode: 'fitRows' });
+    $('.filters_menu').on('click', 'li', function() {
+      $('.filters_menu li').removeClass('active');
+      $(this).addClass('active');
+      $grid.isotope({ filter: $(this).attr('data-filter') });
+    });
+  });
+</script>
+{% endblock main %}

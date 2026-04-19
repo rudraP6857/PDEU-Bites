@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block class %}class="sub_page"{% endblock class %}
+{% load static %}
+
+{% block main %}
+<style>
+    .dashboard-page { background: #f0f2f5; padding: 40px 0; min-height: 90vh; }
+    .stat-card {
+        background: #fff; border-radius: 15px; padding: 25px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center;
+        border-bottom: 4px solid #ffbe33;
+    }
+    .stat-card h3 { font-size: 2rem; font-weight: 800; color: #1a1a2e; margin: 10px 0 5px; }
+    .stat-card p { color: #8892b0; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+    
+    .order-table-card {
+        background: #fff; border-radius: 15px; padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-top: 30px;
+    }
+    .table thead th { border: none; color: #8892b0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+    .table tbody td { vertical-align: middle; color: #1a1a2e; font-weight: 500; font-size: 0.9rem; border-color: #f0f2f5; }
+    
+    .status-select {
+        border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 5px 10px;
+        font-size: 0.85rem; font-weight: 600; outline: none; cursor: pointer;
+        transition: 0.2s;
+    }
+    .status-select:focus { border-color: #ffbe33; }
+    
+    .customer-info { font-size: 0.8rem; color: #8892b0; display: block; }
+</style>
+
+<section class="dashboard-page">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 style="font-weight:800; color:#1a1a2e;">Manager Dashboard</h1>
+                <p style="color:#8892b0;">Real-time overview of PDEU Bites operations</p>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="stat-card">
+                    <i class="fa fa-shopping-cart" style="color:#ffbe33; font-size:1.5rem;"></i>
+                    <h3>{{ orders.count }}</h3>
+                    <p>Total Orders</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stat-card" style="border-color:#28a745;">
+                    <i class="fa fa-money" style="color:#28a745; font-size:1.5rem;"></i>
+                    <h3>₹{{ total_revenue }}</h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stat-card" style="border-color:#007bff;">
+                    <i class="fa fa-clock-o" style="color:#007bff; font-size:1.5rem;"></i>
+                    <h3>{{ pending_count }}</h3>
+                    <p>Pending Orders</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="order-table-card">
+            <h4 class="mb-4" style="font-weight:800; color:#1a1a2e;">All Orders</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}<br><small class="text-muted">{{ order.created_at|date:"d/m H:i" }}</small></td>
+                            <td>
+                                <strong>{{ order.name }}</strong>
+                                <span class="customer-info">{{ order.phone }}</span>
+                            </td>
+                            <td>
+                                {% for item in order.items.all %}
+                                    <small>{{ item.quantity }}x {{ item.item_name }}</small>{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td style="font-weight:800;">₹{{ order.total_amount }}</td>
+                            <td>
+                                <div class="mb-2">
+                                    {% if order.status == 'Pending' %}
+                                        <span class="badge badge-warning" style="border-radius:20px; padding:4px 12px; font-size:0.7rem;">PENDING</span>
+                                    {% elif order.status == 'Preparing' %}
+                                        <span class="badge badge-primary" style="border-radius:20px; padding:4px 12px; font-size:0.7rem;">PREPARING</span>
+                                    {% else %}
+                                        <span class="badge badge-success" style="border-radius:20px; padding:4px 12px; font-size:0.7rem;">DELIVERED</span>
+                                    {% endif %}
+                                </div>
+                                <select class="status-select w-100" onchange="updateStatus({{ order.id }}, this.value)">
+                                    <option value="Pending" {% if order.status == 'Pending' %}selected{% endif %}>Update to Pending</option>
+                                    <option value="Preparing" {% if order.status == 'Preparing' %}selected{% endif %}>Update to Preparing</option>
+                                    <option value="Delivered" {% if order.status == 'Delivered' %}selected{% endif %}>Update to Delivered</option>
+                                </select>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function updateStatus(orderId, newStatus) {
+    fetch(`/update-order-status/${orderId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `status=${newStatus}`
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast('Order status updated! ✅');
+        } else {
+            showToast('Update failed!', 'error');
+        }
+    });
+}
+</script>
+{% endblock main %}

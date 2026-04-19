@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block class %}class="sub_page"{% endblock class %}
+{% load static %}
+
+{% block main %}
+<style>
+    .logout-section {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8f9fa, #fff);
+        padding: 40px 20px;
+    }
+    .logout-card {
+        background: #fff;
+        border-radius: 25px;
+        box-shadow: 0 15px 45px rgba(0,0,0,0.08);
+        padding: 50px 40px;
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.03);
+    }
+    .logout-icon {
+        width: 90px;
+        height: 90px;
+        background: rgba(255, 190, 51, 0.15);
+        color: #ffbe33;
+        font-size: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px;
+    }
+    .logout-card h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1a1a2e;
+        margin-bottom: 15px;
+    }
+    .logout-card p {
+        color: #8892b0;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin-bottom: 35px;
+    }
+    .btn-logout-confirm {
+        background: linear-gradient(135deg, #ffbe33, #ff8c00);
+        color: #1a1a2e;
+        border: none;
+        border-radius: 30px;
+        padding: 14px 35px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 15px;
+        box-shadow: 0 8px 20px rgba(255, 190, 51, 0.3);
+    }
+    .btn-logout-confirm:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(255, 190, 51, 0.4);
+        color: #1a1a2e;
+    }
+    .btn-logout-cancel {
+        color: #8892b0;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s;
+        display: inline-block;
+        padding: 10px;
+    }
+    .btn-logout-cancel:hover {
+        color: #1a1a2e;
+    }
+</style>
+
+<section class="logout-section">
+    <div class="logout-card">
+        <div class="logout-icon">
+            <i class="fa fa-sign-out"></i>
+        </div>
+        <h2>Wait! Leaving?</h2>
+        <p>Are you sure you want to log out? You will lose any items currently in your session cart.</p>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout-confirm">Yes, Logout</button>
+            <a href="{% url 'Home' %}" class="btn-logout-cancel">No, take me back</a>
+        </form>
+    </div>
+</section>
+{% endblock main %}

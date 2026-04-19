@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+{% block class %}class="sub_page"{% endblock class %}
+{% block feedback_status %}active{% endblock feedback_status %}
+
+{% block main %}
+<style>
+  .feedback-page { background: linear-gradient(135deg,#f8f9fa,#fff); padding:60px 0; }
+  .feedback-card { background:#fff; border-radius:20px; box-shadow:0 15px 40px rgba(0,0,0,0.08); overflow:hidden; max-width:820px; margin:0 auto; }
+  .feedback-header { background:linear-gradient(135deg,#1a1a2e,#16213e); padding:40px; text-align:center; }
+  .feedback-header h2 { color:#ffbe33; font-weight:800; font-size:2rem; margin-bottom:6px; }
+  .feedback-header p { color:#8892b0; font-size:0.95rem; margin:0; }
+  .feedback-body { padding:40px; }
+  .form-group label { font-weight:600; font-size:0.87rem; color:#444; margin-bottom:6px; display:block; }
+  .form-group input, .form-group textarea {
+    width:100%; border:1.5px solid #e2e8f0; border-radius:10px; padding:11px 14px;
+    font-size:0.93rem; font-family:'Outfit',sans-serif; transition:0.2s; outline:none; background:#fafafa;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    border-color:#ffbe33; box-shadow:0 0 0 3px rgba(255,190,51,0.15); background:#fff;
+  }
+  /* Star Rating */
+  .star-rating { display:flex; gap:8px; flex-direction:row-reverse; justify-content:flex-end; }
+  .star-rating input { display:none; }
+  .star-rating label { font-size:2rem; color:#ddd; cursor:pointer; transition:color 0.15s, transform 0.15s; }
+  .star-rating input:checked ~ label,
+  .star-rating label:hover,
+  .star-rating label:hover ~ label { color:#ffbe33; transform:scale(1.15); }
+  .star-rating input:checked + label { transform:scale(1.2); }
+  .file-upload-area {
+    border:2px dashed #e2e8f0; border-radius:12px; padding:20px; text-align:center;
+    cursor:pointer; transition:0.2s; background:#fafafa;
+  }
+  .file-upload-area:hover { border-color:#ffbe33; background:#fffdf5; }
+  .file-upload-area i { font-size:1.8rem; color:#ccc; margin-bottom:8px; display:block; }
+  .file-upload-area span { font-size:0.85rem; color:#888; }
+  .btn-submit {
+    width:100%; padding:14px; border:none; border-radius:30px;
+    background:linear-gradient(135deg,#ffbe33,#ff8c00); color:#1a1a2e;
+    font-weight:800; font-size:1.05rem; cursor:pointer; transition:0.2s; margin-top:10px;
+  }
+  .btn-submit:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(255,190,51,0.4); }
+  .alert-success-custom {
+    background:linear-gradient(135deg,#d4edda,#c3e6cb); border:none; border-radius:12px;
+    color:#155724; padding:14px 18px; font-weight:600; margin-bottom:20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:600px){ .form-row-2{ grid-template-columns:1fr; } }
+</style>
+
+<section class="feedback-page">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h1 style="font-size:2.5rem; font-weight:800; color:#1a1a2e;">Share Your Experience</h1>
+      <p style="color:#8892b0;">Your feedback helps us improve — we read every single review!</p>
+    </div>
+
+    <div class="feedback-card">
+      <div class="feedback-header">
+        <h2>⭐ Leave a Review</h2>
+        <p>Tell us how your PDEU Bites experience was</p>
+      </div>
+
+      <div class="feedback-body">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert-success-custom">
+            <i class="fa fa-check-circle fa-lg"></i> {{ message }}
+          </div>
+          {% endfor %}
+        {% endif %}
+
+        <form action="{% url 'Feedback_Form' %}" method="POST" enctype="multipart/form-data" id="feedback-form">
+          {% csrf_token %}
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label><i class="fa fa-user" style="color:#ffbe33;"></i> Your Name *</label>
+              <input type="text" name="User_name" required placeholder="Enter your name" />
+            </div>
+            <div class="form-group">
+              <label><i class="fa fa-envelope" style="color:#ffbe33;"></i> Email Address</label>
+              <input type="email" name="User_email" placeholder="your@email.com (optional)" />
+              <small style="color:#aaa; font-size:0.78rem;">We'll send a thank-you note</small>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:20px;">
+            <label><i class="fa fa-star" style="color:#ffbe33;"></i> Your Rating *</label>
+            <div class="star-rating">
+              <input type="radio" id="star5" name="Rating" value="5" required /><label for="star5" title="5 stars">★</label>
+              <input type="radio" id="star4" name="Rating" value="4" /><label for="star4" title="4 stars">★</label>
+              <input type="radio" id="star3" name="Rating" value="3" /><label for="star3" title="3 stars">★</label>
+              <input type="radio" id="star2" name="Rating" value="2" /><label for="star2" title="2 stars">★</label>
+              <input type="radio" id="star1" name="Rating" value="1" /><label for="star1" title="1 star">★</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa fa-comment" style="color:#ffbe33;"></i> Your Review *</label>
+            <textarea name="Description" rows="4" required placeholder="Describe your experience — food, service, ambience..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa fa-camera" style="color:#ffbe33;"></i> Upload a Photo (optional)</label>
+            <div class="file-upload-area" onclick="document.getElementById('selfieInput').click();">
+              <i class="fa fa-cloud-upload"></i>
+              <span id="file-label">Click to upload your photo</span>
+            </div>
+            <input type="file" id="selfieInput" name="Selfie" accept="image/*" style="display:none;"
+              onchange="document.getElementById('file-label').textContent = this.files[0]?.name || 'Click to upload your photo';">
+          </div>
+
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <i class="fa fa-paper-plane mr-2"></i> Submit Feedback
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('feedback-form').addEventListener('submit', function() {
+    const btn = document.getElementById('submit-btn');
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>Submitting...';
+    btn.disabled = true;
+  });
+</script>
+{% endblock main %}

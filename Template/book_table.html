@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% load static %}
+{% block class %}class="sub_page"{% endblock class %}
+{% block table_status %}active{% endblock table_status %}
+
+{% block main %}
+<style>
+  /* ── PAGE WRAPPER ── */
+  .bt-page { background: #f4f6f9; padding: 60px 0; }
+
+  /* ── OUTER LAYOUT ── */
+  .bt-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 28px;
+    align-items: stretch;
+  }
+
+  /* ── DARK FORM CARD ── */
+  .bt-form-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.22);
+  }
+
+  .bt-form-card .bt-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #ffbe33;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .bt-form-card .bt-sub {
+    color: #8892b0;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Alerts */
+  .bt-alert-success {
+    background: rgba(40,167,69,0.15);
+    border: 1px solid rgba(40,167,69,0.35);
+    border-radius: 12px; color: #6fcf8e;
+    padding: 12px 16px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 0.88rem;
+  }
+  .bt-alert-error {
+    background: rgba(220,53,69,0.15);
+    border: 1px solid rgba(220,53,69,0.35);
+    border-radius: 12px; color: #f08080;
+    padding: 12px 16px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 0.88rem;
+  }
+
+  /* Amenity chips */
+  .bt-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .bt-chip {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: 5px 13px;
+    font-size: 0.78rem; color: #ccd6f6;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .bt-chip i { color: #ffbe33; }
+
+  /* Form fields */
+  .bt-field { margin-bottom: 14px; }
+  .bt-field label {
+    display: block; font-weight: 600; font-size: 0.82rem;
+    color: #8892b0; margin-bottom: 5px;
+    font-family: 'Outfit', sans-serif;
+  }
+  .bt-field label i { color: #ffbe33; margin-right: 4px; }
+  .bt-field input,
+  .bt-field select,
+  .bt-field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06) !important;
+    border: 1.5px solid rgba(255,255,255,0.12) !important;
+    border-radius: 10px !important;
+    padding: 11px 14px !important;
+    color: #fff !important;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    height: auto !important;
+    margin-bottom: 0 !important;
+    resize: none;
+  }
+  .bt-field input::placeholder,
+  .bt-field textarea::placeholder { color: #8892b0; }
+  .bt-field input:focus,
+  .bt-field select:focus,
+  .bt-field textarea:focus {
+    border-color: #ffbe33 !important;
+    background: rgba(255,190,51,0.06) !important;
+    box-shadow: 0 0 0 3px rgba(255,190,51,0.12) !important;
+  }
+  .bt-field select option { color: #1a1a2e; background: #fff; }
+
+  /* Calendar / time picker icon colour fix */
+  .bt-field input[type="date"]::-webkit-calendar-picker-indicator,
+  .bt-field input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.7);
+    cursor: pointer;
+  }
+
+  .bt-field small { font-size: 0.75rem; color: #6a7490; margin-top: 3px; display: block; }
+  .bt-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* Submit */
+  .bt-submit {
+    width: 100%; margin-top: 8px;
+    padding: 14px; border: none; border-radius: 30px;
+    background: linear-gradient(135deg, #ffbe33, #ff8c00);
+    color: #1a1a2e; font-weight: 800; font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .bt-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,190,51,0.45); }
+  .bt-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  /* ── MAP CARD ── */
+  .bt-map-card {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.18);
+    min-height: 520px;
+  }
+  .bt-map-card iframe {
+    width: 100%; height: 100%; min-height: 520px;
+    border: none; display: block;
+  }
+  .bt-map-chip {
+    position: absolute; bottom: 20px; left: 20px; right: 20px;
+    background: rgba(26,26,46,0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,190,51,0.3);
+    border-radius: 12px; padding: 14px 18px; color: #fff;
+  }
+  .bt-map-chip strong {
+    color: #ffbe33; display: block;
+    font-size: 0.95rem; margin-bottom: 3px;
+    font-family: 'Outfit', sans-serif;
+  }
+  .bt-map-chip span { font-size: 0.82rem; color: #ccd6f6; }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    .bt-layout { grid-template-columns: 1fr; }
+    .bt-map-card { min-height: 340px; }
+    .bt-map-card iframe { min-height: 340px; }
+  }
+  @media (max-width: 575px) {
+    .bt-form-card { padding: 28px 20px; }
+    .bt-row2 { grid-template-columns: 1fr; gap: 0; }
+  }
+</style>
+
+<section class="bt-page">
+  <div class="container">
+
+    <!-- Page heading -->
+    <div class="text-center mb-5">
+      <h1 style="font-family:'Outfit',sans-serif; font-size:2.4rem; font-weight:800; color:#1a1a2e;">Reserve Your Table</h1>
+      <p style="color:#8892b0; font-size:0.97rem;">Book in advance &amp; enjoy a seamless dining experience at PDEU Bites</p>
+    </div>
+
+    <div class="bt-layout">
+
+      <!-- ── DARK FORM ── -->
+      <div class="bt-form-card">
+
+        {% if messages %}
+          {% for message in messages %}
+            {% if 'successfully' in message.message|lower %}
+            <div class="bt-alert-success"><i class="fa fa-check-circle fa-lg"></i> {{ message }}</div>
+            {% else %}
+            <div class="bt-alert-error"><i class="fa fa-exclamation-circle fa-lg"></i> {{ message }}</div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        <p class="bt-title">Book A Table</p>
+        <p class="bt-sub">Fill in the details and we'll confirm your reservation.</p>
+
+        <div class="bt-chips">
+          <span class="bt-chip"><i class="fa fa-wifi"></i> Free Wi-Fi</span>
+          <span class="bt-chip"><i class="fa fa-car"></i> Parking</span>
+          <span class="bt-chip"><i class="fa fa-snowflake-o"></i> AC Seating</span>
+          <span class="bt-chip"><i class="fa fa-music"></i> Live Music</span>
+        </div>
+
+        <form action="{% url 'Book_Table' %}" method="POST" id="bt-form">
+          {% csrf_token %}
+
+          <div class="bt-row2">
+            <div class="bt-field">
+              <label for="bt_name"><i class="fa fa-user"></i>Full Name *</label>
+              <input type="text" id="bt_name" name="user_name" required placeholder="Your Name" />
+            </div>
+            <div class="bt-field">
+              <label for="bt_phone"><i class="fa fa-phone"></i>Phone *</label>
+              <input type="tel" id="bt_phone" name="phone_number" required placeholder="10-digit number" maxlength="10" />
+            </div>
+          </div>
+
+          <div class="bt-field">
+            <label for="bt_email"><i class="fa fa-envelope"></i>Email Address *</label>
+            <input type="email" id="bt_email" name="user_email" required placeholder="your@email.com" />
+            <small>Confirmation will be sent to this email</small>
+          </div>
+
+          <div class="bt-row2">
+            <div class="bt-field">
+              <label for="bt_date"><i class="fa fa-calendar"></i>Date *</label>
+              <input type="date" id="bt_date" name="booking_data" required />
+            </div>
+            <div class="bt-field">
+              <label for="bt_time"><i class="fa fa-clock-o"></i>Time</label>
+              <input type="time" id="bt_time" name="booking_time" />
+            </div>
+          </div>
+
+          <div class="bt-field">
+            <label for="bt_guests"><i class="fa fa-users"></i>Number of Guests *</label>
+            <select id="bt_guests" name="total_person" required>
+              <option value="" disabled selected>Select guests</option>
+              <option value="1">1 Person</option>
+              <option value="2">2 Persons</option>
+              <option value="3">3 Persons</option>
+              <option value="4">4 Persons</option>
+              <option value="5">5 Persons</option>
+              <option value="6">6 Persons</option>
+              <option value="8">8+ Persons (large group)</option>
+            </select>
+          </div>
+
+          <div class="bt-field">
+            <label for="bt_request"><i class="fa fa-comment"></i>Special Requests</label>
+            <textarea id="bt_request" name="special_request" rows="3"
+              placeholder="Allergies, seating preference, occasion…"></textarea>
+          </div>
+
+          <button type="submit" class="bt-submit" id="bt-submit-btn">
+            <i class="fa fa-calendar-check-o" style="margin-right:6px;"></i>Confirm My Booking
+          </button>
+        </form>
+      </div>
+
+      <!-- ── MAP ── -->
+      <div class="bt-map-card">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3666.7867685862765!2d72.6636!3d23.1557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2a5699d69a5d%3A0x5adedf24e5c3a5cc!2sPandit%20Deendayal%20Energy%20University!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="PDEU Bites Location — Gandhinagar">
+        </iframe>
+        <div class="bt-map-chip">
+          <strong><i class="fa fa-map-marker" style="margin-right:6px;"></i>PDEU Bites, Gandhinagar</strong>
+          <span>PDPU Road, Raisan, Gandhinagar, Gujarat — 382355</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  // Min date = today
+  var d = document.getElementById('bt_date');
+  if (d) d.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+  document.getElementById('bt-form').addEventListener('submit', function() {
+    var btn = document.getElementById('bt-submit-btn');
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin" style="margin-right:6px;"></i>Booking…';
+    btn.disabled = true;
+  });
+</script>
+{% endblock main %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block class %}class="sub_page"{% endblock class %}
+{% block menu_status %}active{% endblock menu_status %}
+{% load static %}
+
+{% block main %}
+<style>
+  .menu-page { background: linear-gradient(135deg,#f8f9fa,#fff); padding:60px 0; }
+  .menu-heading h1 { font-size:2.6rem; font-weight:800; color:#1a1a2e; }
+  .menu-heading p { color:#8892b0; font-size:1rem; }
+  /* Filter tabs */
+  .filters_menu { list-style:none; padding:0; display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:40px; }
+  .filters_menu li {
+    padding:8px 22px; border-radius:25px; border:1.5px solid #e2e8f0;
+    cursor:pointer; font-weight:600; font-size:0.88rem; color:#555;
+    transition:all 0.25s; background:#fff;
+  }
+  .filters_menu li:hover, .filters_menu li.active {
+    background:linear-gradient(135deg,#ffbe33,#ff8c00); border-color:transparent; color:#1a1a2e;
+  }
+  /* Menu Cards */
+  .menu-card {
+    background:#fff; border-radius:18px; overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,0.06); transition:transform 0.3s, box-shadow 0.3s;
+    height:100%; display:flex; flex-direction:column;
+  }
+  .menu-card:hover { transform:translateY(-6px); box-shadow:0 15px 35px rgba(0,0,0,0.12); }
+  .menu-card .img-box { overflow:hidden; height:200px; position:relative; }
+  .menu-card .img-box img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s; }
+  .menu-card:hover .img-box img { transform:scale(1.08); }
+  .menu-card .badge-cat {
+    position:absolute; top:12px; left:12px;
+    background:linear-gradient(135deg,#ffbe33,#ff8c00); color:#1a1a2e;
+    padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:700;
+  }
+  .menu-card .card-body { padding:18px; flex-grow:1; display:flex; flex-direction:column; }
+  .menu-card .card-body h5 { font-size:1.05rem; font-weight:700; color:#1a1a2e; margin-bottom:6px; }
+  .menu-card .card-body p { font-size:0.84rem; color:#8892b0; line-height:1.5; flex-grow:1; margin-bottom:12px; }
+  .menu-card .card-footer-row { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #f0f0f0; }
+  .menu-card .price { font-size:1.25rem; font-weight:800; color:#1a1a2e; }
+  .menu-card .price span { font-size:0.78rem; font-weight:500; color:#aaa; display:block; }
+  .btn-add-cart {
+    background:linear-gradient(135deg,#ffbe33,#ff8c00); border:none; border-radius:25px;
+    padding:8px 18px; font-weight:700; font-size:0.85rem; color:#1a1a2e;
+    cursor:pointer; transition:0.2s; display:flex; align-items:center; gap:6px;
+  }
+  .btn-add-cart:hover { transform:scale(1.05); box-shadow:0 4px 15px rgba(255,190,51,0.4); }
+  .login-notice { background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:15px; padding:20px 25px; text-align:center; margin:15px 0 30px; color:#ccd6f6; }
+  .login-notice a { color:#ffbe33; font-weight:700; text-decoration:none; }
+  .col-card { margin-bottom:24px; }
+</style>
+
+<section class="menu-page">
+  <div class="container">
+    <div class="menu-heading text-center mb-4">
+      <h1>Our Menu</h1>
+      <p>Explore our wide range of freshly prepared dishes</p>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="login-notice">
+      <i class="fa fa-lock mr-2" style="color:#ffbe33;"></i>
+      <a href="{% url 'login' %}">Login</a> to add items to your cart and place orders.
+    </div>
+    {% endif %}
+
+    <!-- Search Bar -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-md-7">
+        <form action="{% url 'Menu' %}" method="GET" class="d-flex" style="gap:10px;">
+          <div style="position:relative; flex-grow:1;">
+            <i class="fa fa-search" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:#8892b0;"></i>
+            <input type="text" name="q" placeholder="Search for your favorite dish..." value="{{ query|default:'' }}" 
+              style="width:100%; border:1.5px solid #e2e8f0; border-radius:30px; padding:12px 20px 12px 45px; font-size:0.95rem; outline:none; transition:0.2s; box-shadow:0 4px 15px rgba(0,0,0,0.03);">
+          </div>
+          <button type="submit" class="hero-btn-primary" style="padding:12px 25px; border-radius:30px; font-size:0.9rem;">Search</button>
+          {% if query %}
+            <a href="{% url 'Menu' %}" class="btn-add-cart" style="background:#f8f9fa; color:#8892b0; border:1.5px solid #e2e8f0; border-radius:30px; display:flex; align-items:center; justify-content:center; text-decoration:none;">Clear</a>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+
+    <ul class="filters_menu">
+      <li class="active" data-filter="*">All</li>
+      {% for i in list %}
+      <li data-filter=".{{ i.Category_name }}">{{ i.Category_name }}</li>
+      {% endfor %}
+    </ul>
+
+    <div class="filters-content">
+      <div class="row grid">
+        {% for j in items %}
+        <div class="col-sm-6 col-lg-4 col-card all {{ j.Category.Category_name }}">
+          <div class="menu-card">
+            <div class="img-box">
+              <img src="/media/{{ j.Image }}" alt="{{ j.Item_name }}" loading="lazy">
+              <span class="badge-cat">{{ j.Category }}</span>
+            </div>
+            <div class="card-body">
+              <h5>{{ j.Item_name }}</h5>
+              <p>{{ j.description }}</p>
+              <div class="card-footer-row">
+                <div class="price">
+                  ₹{{ j.Price }}
+                  <span>per serving</span>
+                </div>
+                {% if user.is_authenticated %}
+                <button class="btn-add-cart add-to-cart"
+                  data-item-id="{{ j.id }}"
+                  data-item-name="{{ j.Item_name }}"
+                  data-item-price="{{ j.Price }}">
+                  <i class="fa fa-plus"></i> Add
+                </button>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn-add-cart" style="text-decoration:none;">
+                  <i class="fa fa-lock"></i> Login
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5" style="color:#aaa;">
+          <i class="fa fa-cutlery" style="font-size:3rem; opacity:0.3; display:block; margin-bottom:15px;"></i>
+          <p>No menu items available yet. Check back soon!</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  
+  // Add to cart
+  document.querySelectorAll('.add-to-cart').forEach(function(button) {
+    button.addEventListener('click', function() {
+      var itemId = this.getAttribute('data-item-id');
+      var btn = this;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+
+      fetch('/add-to-cart/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFTOKEN': '{{ csrf_token }}'
+        },
+        body: 'item_id=' + itemId
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        btn.disabled = false;
+        if (data.message) {
+          btn.innerHTML = '<i class="fa fa-check"></i> Added';
+          showToast(data.message, 'success');
+        } else {
+          btn.innerHTML = '<i class="fa fa-plus"></i> Add';
+          showToast(data.error || 'Failed to add item.', 'error');
+        }
+        setTimeout(function() { btn.innerHTML = '<i class="fa fa-plus"></i> Add'; }, 1500);
+      })
+      .catch(function() {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa fa-plus"></i> Add';
+      });
+    });
+  });
+  // Isotope filter
+  $(document).ready(function() {
+    var $grid = $('.grid').isotope({ itemSelector: '.col-card', layoutMode: 'fitRows' });
+    $('.filters_menu').on('click', 'li', function() {
+      $('.filters_menu li').removeClass('active');
+      $(this).addClass('active');
+      var filterValue = $(this).attr('data-filter');
+      $grid.isotope({ filter: filterValue });
+    });
+  });
+
+</script>
+{% endblock main %}

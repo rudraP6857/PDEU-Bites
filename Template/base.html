@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="keywords" content="PDEU Bites, restaurant, Gandhinagar, food, order online, PDPU" />
+  <meta name="description" content="PDEU Bites — Best food near PDEU Gandhinagar. Order online, book a table, and enjoy fresh meals." />
+  <meta name="author" content="PDEU Bites" />
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">
+  <title>PDEU Bites — Best Food Near PDEU, Gandhinagar</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+  <!-- Owl Carousel -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- Nice Select -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" />
+  <!-- Font Awesome -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <!-- Original theme CSS (must come before our overrides) -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+  <!-- Toastify -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+  <style>
+    /* ─── Global ─── */
+    body { font-family: 'Outfit', 'Open Sans', sans-serif; }
+
+    /* ─── NAVBAR overrides (work WITH .header_section from style.css) ─── */
+    /* ─── NAVBAR Overrides ─── */
+    .header_section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(15, 15, 35, 0.8) !important;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255, 190, 51, 0.15);
+      padding: 8px 0 !important;
+      transition: all 0.3s ease;
+    }
+    .header_section.scrolled {
+      background: rgba(15, 15, 35, 0.95) !important;
+      padding: 5px 0 !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    /* Brand */
+    .navbar-brand span {
+      font-family: 'Dancing Script', cursive !important;
+      font-size: 2.2rem !important;
+      color: #ffbe33 !important;
+      font-weight: 700;
+      text-shadow: 0 0 15px rgba(255, 190, 51, 0.3);
+    }
+    
+    /* Nav links */
+    .custom_nav-container .navbar-nav .nav-item .nav-link {
+      color: #ccd6f6 !important;
+      font-weight: 600;
+      font-size: 0.88rem !important;
+      padding: 8px 18px !important;
+      border-radius: 30px;
+      transition: 0.3s;
+      margin: 0 5px;
+    }
+    .custom_nav-container .navbar-nav .nav-item:hover .nav-link,
+    .custom_nav-container .navbar-nav .nav-item.active .nav-link {
+      color: #1a1a2e !important;
+      background: #ffbe33 !important;
+      box-shadow: 0 4px 15px rgba(255, 190, 51, 0.4);
+    }
+
+    /* Dropdown Items Hover */
+    .dropdown-menu { padding: 8px !important; overflow: hidden; }
+    .dropdown-item { 
+      transition: 0.2s; 
+      color: #ccd6f6 !important; 
+      background: transparent !important;
+      border-radius: 8px !important;
+      margin: 4px 8px !important;
+      padding: 10px 15px !important;
+      width: calc(100% - 16px) !important;
+    }
+    .dropdown-item:hover {
+      background: #ffbe33 !important;
+      color: #1a1a2e !important;
+    }
+    .dropdown-item:hover i { color: #1a1a2e !important; }
+
+    /* Upsell Banner */
+    .upsell-banner {
+      background: rgba(255, 190, 51, 0.1);
+      border: 1px dashed #ffbe33;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.78rem;
+      color: #ffbe33;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+    
+    /* User area */
+    .user-badge {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffbe33;
+      padding: 7px 16px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border: 1px solid rgba(255, 190, 51, 0.3);
+    }
+    .btn-nav-logout {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: #ccd6f6;
+      border-radius: 30px;
+      padding: 7px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+    .btn-nav-logout:hover {
+      background: rgba(233, 69, 96, 0.1);
+      border-color: #e94560;
+      color: #e94560;
+    }
+    
+    #cart-button {
+      background: linear-gradient(135deg, #ffbe33, #ff8c00) !important;
+      border: none !important;
+      border-radius: 30px !important;
+      padding: 8px 22px !important;
+      font-weight: 800 !important;
+      color: #1a1a2e !important;
+      font-size: 0.85rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #cart-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 190, 51, 0.5);
+    }
+    
+    .hero_area { padding-top: 85px; } /* Offset for fixed header */
+    
+    .navbar-toggler { border: none !important; outline: none !important; }
+    
+    @media (max-width: 991px) {
+      .header_section { background: #1a1a2e !important; }
+      .navbar-collapse { background: #1a1a2e; padding: 20px; border-radius: 15px; margin-top: 15px; border: 1px solid rgba(255,190,51,0.2); }
+      .user_option { justify-content: center; margin-top: 15px; }
+      .navbar-nav { text-align: center; }
+    }
+
+    .user_option .order_online {
+      background: linear-gradient(135deg, #ffbe33, #ff8c00) !important;
+      color: #1a1a2e !important;
+      font-weight: 700;
+      border-radius: 30px !important;
+      padding: 8px 24px !important;
+      font-size: 0.88rem;
+      transition: all 0.3s;
+      border: none !important;
+      text-decoration: none;
+    }
+    .user_option .order_online:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 190, 51, 0.5);
+      color: #1a1a2e !important;
+    }
+    .user_option { gap: 12px !important; }
+
+    /* ─── CART DRAWER ─── */
+    .cart-drawer {
+      position: fixed; top: 0; right: -420px; width: 400px; max-width: 96vw; height: 100vh;
+      background: #fff; box-shadow: -6px 0 28px rgba(0,0,0,0.18);
+      z-index: 1060; transition: right 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+      display: flex; flex-direction: column;
+    }
+    .cart-drawer.open { right: 0; }
+    .cart-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background: rgba(0,0,0,0.55); z-index: 1050; display: none; opacity: 0; transition: opacity 0.3s;
+    }
+    .cart-overlay.open { display: block; opacity: 1; }
+    .cart-header {
+      padding: 20px 22px;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,190,51,0.2);
+      flex-shrink: 0;
+    }
+    .cart-header h5 { margin: 0; color: #ffbe33; font-weight: 700; font-size: 1.05rem; font-family: 'Outfit', sans-serif; }
+    .cart-header button.close { color: #fff !important; opacity: 1 !important; font-size: 1.6rem; outline: none !important; }
+    .cart-body { padding: 18px; flex-grow: 1; overflow-y: auto; }
+    .cart-footer {
+      padding: 18px 20px; border-top: 2px solid #f5f5f5;
+      background: #fafafa; flex-shrink: 0;
+    }
+    .cart-item-card {
+      list-style: none;
+      background: #fff; border: 1px solid #f0f4ff;
+      border-radius: 12px; padding: 12px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .cart-item-card strong { display: block; font-size: 0.93rem; color: #1a1a2e; margin-bottom: 3px; font-family: 'Outfit', sans-serif; }
+    .cart-item-card .price-line { font-size: 0.82rem; color: #888; margin-bottom: 8px; }
+    .cart-qty-group { display: flex; align-items: center; gap: 7px; }
+    .cq-btn {
+      width: 30px; height: 30px; border-radius: 50%; border: none;
+      font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform 0.15s;
+    }
+    .cq-btn.inc { background: linear-gradient(135deg, #28a745, #20c997); color: #fff; }
+    .cq-btn.dec { background: linear-gradient(135deg, #ffc107, #fd7e14); color: #fff; }
+    .cq-btn.rem { background: linear-gradient(135deg, #dc3545, #c0392b); color: #fff; width: auto; border-radius: 12px; padding: 0 10px; font-size: 0.75rem; }
+    .cq-btn:hover { transform: scale(1.12); }
+    .cart-total-label { font-size: 1rem; color: #555; }
+    #cart-total { font-size: 1.35rem; font-weight: 800; color: #1a1a2e; font-family: 'Outfit', sans-serif; }
+    #checkout-btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, #ffbe33, #ff8c00) !important;
+      color: #1a1a2e !important; border: none !important;
+      border-radius: 25px !important; font-weight: 800 !important;
+      font-size: 1rem; font-family: 'Outfit', sans-serif;
+      cursor: pointer; transition: 0.2s;
+    }
+    #checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 22px rgba(255,190,51,0.45); }
+    #cart-items-list { padding-left: 0; margin: 0; }
+    .cart-empty-msg { text-align: center; padding: 40px 20px; color: #bbb; }
+    .cart-empty-msg i { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.3; }
+
+    /* ─── FOOTER overrides (work WITH .footer_section from style.css) ─── */
+    .footer_section {
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 60%, #16213e 100%) !important;
+      padding: 60px 0 0 0 !important;
+      text-align: left !important;
+    }
+    .footer_section h4 {
+      font-size: 1rem !important;
+      font-weight: 700 !important;
+      color: #ffbe33 !important;
+      font-family: 'Outfit', sans-serif !important;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 18px !important;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(255,190,51,0.25);
+    }
+    .footer_section p { color: #8892b0 !important; font-size: 0.88rem; line-height: 1.7; }
+    .footer_section a { color: #8892b0 !important; font-size: 0.88rem; transition: color 0.2s; }
+    .footer_section a:hover { color: #ffbe33 !important; }
+    /* Footer logo */
+    .footer_section .footer-logo {
+      font-family: 'Dancing Script', cursive !important;
+      font-size: 2rem !important;
+      color: #ffbe33 !important;
+      font-weight: 700 !important;
+      display: block;
+      margin-bottom: 12px !important;
+    }
+    /* Contact links */
+    .footer_section .contact_link_box a {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin: 0 0 14px 0 !important;
+      color: #8892b0 !important;
+    }
+    .footer_section .contact_link_box a i { color: #ffbe33; margin-top: 2px; width: 15px; flex-shrink: 0; }
+    .footer_section .contact_link_box a:hover { color: #ffbe33 !important; }
+    /* Quick links */
+    .footer-links { list-style: none; padding: 0; margin: 0; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links li a { display: flex; align-items: center; gap: 8px; }
+    .footer-links li a i { color: #ffbe33; font-size: 0.7rem; }
+    /* Hours table */
+    .hours-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.86rem; }
+    .hours-row:last-of-type { border-bottom: none; }
+    .hours-row span:first-child { color: #8892b0; }
+    .hours-row span:last-child { color: #ffbe33; font-weight: 600; }
+    /* Social icons */
+    .footer_section .footer_social { justify-content: flex-start !important; gap: 10px; margin-top: 18px !important; }
+    .footer_section .footer_social a {
+      width: 36px !important; height: 36px !important;
+      background: rgba(255,255,255,0.06) !important;
+      border: 1px solid rgba(255,190,51,0.25) !important;
+      border-radius: 50% !important;
+      color: #8892b0 !important;
+      font-size: 15px !important;
+      margin: 0 !important;
+      transition: all 0.25s;
+    }
+    .footer_section .footer_social a:hover {
+      background: #ffbe33 !important;
+      border-color: #ffbe33 !important;
+      color: #1a1a2e !important;
+      transform: translateY(-3px);
+    }
+    /* Info bar */
+    .footer_section .footer-info {
+      border-top: 1px solid rgba(255,255,255,0.07) !important;
+      margin-top: 40px !important;
+      padding: 18px 0 !important;
+      text-align: center !important;
+    }
+    .footer_section .footer-info p { font-size: 0.82rem; color: #4a5568 !important; margin: 0; }
+    .footer_section .footer-info a { color: #ffbe33 !important; }
+    .open-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(40,167,69,0.12); border: 1px solid rgba(40,167,69,0.3);
+      border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; color: #28a745;
+      font-weight: 600; margin-top: 14px;
+    }
+    .open-dot { width: 7px; height: 7px; border-radius: 50%; background: #28a745; animation: blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    /* ─── Global Nice Select Dark Overrides ─── */
+    .nice-select {
+      width: 100% !important;
+      background: rgba(255,255,255,0.06) !important;
+      border: 1.5px solid rgba(255,255,255,0.12) !important;
+      border-radius: 10px !important;
+      color: #fff !important;
+      height: 46px !important;
+      line-height: 42px !important;
+      padding-left: 14px !important;
+      font-size: 0.9rem !important;
+      float: none !important;
+      margin-bottom: 5px;
+    }
+    .nice-select:after {
+      border-bottom: 2px solid #8892b0 !important;
+      border-right: 2px solid #8892b0 !important;
+      right: 16px !important;
+    }
+    .nice-select.open, .nice-select:focus {
+      border-color: #ffbe33 !important;
+      background: rgba(255,190,51,0.06) !important;
+      box-shadow: 0 0 0 3px rgba(255,190,51,0.12) !important;
+    }
+    .nice-select .list {
+      background-color: #1a1a2e !important;
+      border: 1px solid rgba(255,190,51,0.3) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+      width: 100% !important;
+      margin-top: 8px !important;
+    }
+    .nice-select .option {
+      color: #ccd6f6 !important;
+      padding: 10px 15px !important;
+      font-size: 0.9rem !important;
+      line-height: 1.4 !important;
+      min-height: auto !important;
+      transition: all 0.2s;
+    }
+    .nice-select .option:hover, 
+    .nice-select .option.focus, 
+    .nice-select .option.selected.focus {
+      background-color: rgba(255,190,51,0.15) !important;
+      color: #ffbe33 !important;
+    }
+    .nice-select .option.selected {
+      font-weight: 700 !important;
+      color: #ffbe33 !important;
+    }
+    .bt-field, .bfw-field { clear: both; }
+  </style>
+</head>
+
+<body {% block class %}{% endblock class %}>
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="{% static 'images/hero-bg.jpg' %}" alt="PDEU Bites">
+    </div>
+
+    <!-- ── HEADER ── -->
+    <header class="header_section">
+      <div class="container-fluid px-lg-5">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="{% url 'Home' %}">
+            <span>🍽️ PDEU Bites</span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa fa-bars" style="color:#ffbe33; font-size:1.5rem;"></i>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Nav links centered for balance -->
+            <ul class="navbar-nav mx-auto align-items-center">
+              <li class="nav-item {% block home_status %}{% endblock home_status %}">
+                <a class="nav-link" href="{% url 'Home' %}">Home</a>
+              </li>
+              <li class="nav-item {% block menu_status %}{% endblock menu_status %}">
+                <a class="nav-link" href="{% url 'Menu' %}">Menu</a>
+              </li>
+              <li class="nav-item {% block about_status %}{% endblock about_status %}">
+                <a class="nav-link" href="{% url 'About' %}">About</a>
+              </li>
+              <li class="nav-item {% block table_status %}{% endblock table_status %}">
+                <a class="nav-link" href="{% url 'Book_Table' %}">Book Table</a>
+              </li>
+              <li class="nav-item {% block feedback_status %}{% endblock feedback_status %}">
+                <a class="nav-link" href="{% url 'Feedback_Form' %}">Feedback</a>
+              </li>
+            </ul>
+
+            <!-- User Options on the right -->
+            <div class="user_option d-flex align-items-center" style="gap:12px;">
+              {% if user.is_authenticated %}
+                <div class="dropdown">
+                  <a class="user-badge dropdown-toggle" href="#" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration:none;">
+                    👤 {{ user.username }}
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userDropdown" style="background:#1a1a2e; border:1px solid rgba(255,190,51,0.3); border-radius:12px; margin-top:12px;">
+                    <a class="dropdown-item" href="{% url 'edit_profile' %}">
+                      <i class="fa fa-user-circle mr-2" style="color:#ffbe33;"></i> Edit Profile
+                    </a>
+                    <a class="dropdown-item" href="{% url 'order_history' %}">
+                      <i class="fa fa-history mr-2" style="color:#ffbe33;"></i> Order History
+                    </a>
+                    {% if user.is_staff %}
+                    <a class="dropdown-item" href="{% url 'manager_dashboard' %}">
+                      <i class="fa fa-dashboard mr-2" style="color:#ffbe33;"></i> Admin Dashboard
+                    </a>
+                    {% endif %}
+                    <div class="dropdown-divider" style="border-top:1px solid rgba(255,255,255,0.05);"></div>
+                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                      <i class="fa fa-sign-out mr-2"></i> Logout
+                    </a>
+                  </div>
+                </div>
+                <button id="cart-button" type="button">🛒 Cart</button>
+              {% else %}
+                <a href="{% url 'login' %}" class="order_online">Login</a>
+              {% endif %}
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header -->
+
+    <!-- Cart Overlay -->
+    <div id="cart-overlay" class="cart-overlay" onclick="closeCart()"></div>
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="cart-drawer">
+      <div class="cart-header">
+        <h5>🛒 Your Cart</h5>
+        <button type="button" class="close" onclick="closeCart()">&times;</button>
+      </div>
+      <div class="cart-body">
+        <ul id="cart-items-list"></ul>
+      </div>
+      <div class="cart-footer">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="cart-total-label">Total</span>
+          <span id="cart-total"></span>
+        </div>
+        <button id="checkout-btn">🔒 Proceed to Checkout</button>
+      </div>
+    </div>
+
+    {% block slider %}{% endblock slider %}
+  </div>
+
+  {% block main %}{% endblock main %}
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer_section">
+    <div class="container">
+      <div class="row">
+
+        <!-- Brand + Social -->
+        <div class="col-md-3 footer-col">
+          <a href="{% url 'Home' %}" class="footer-logo">🍽️ PDEU Bites</a>
+          <p>Your favourite dining spot near PDEU. Fresh food, bold flavours, fast delivery — every day.</p>
+          <div class="footer_social">
+            <a href="https://www.facebook.com" title="Facebook"><i class="fa fa-facebook"></i></a>
+            <a href="https://www.instagram.com" title="Instagram"><i class="fa fa-instagram"></i></a>
+            <a href="https://www.x.com" title="Twitter"><i class="fa fa-twitter"></i></a>
+            <a href="https://www.youtube.com" title="YouTube"><i class="fa fa-youtube-play"></i></a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-md-3 footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="{% url 'Home' %}"><i class="fa fa-chevron-right"></i> Home</a></li>
+            <li><a href="{% url 'Menu' %}"><i class="fa fa-chevron-right"></i> Our Menu</a></li>
+            <li><a href="{% url 'Book_Table' %}"><i class="fa fa-chevron-right"></i> Book a Table</a></li>
+            <li><a href="{% url 'Feedback_Form' %}"><i class="fa fa-chevron-right"></i> Give Feedback</a></li>
+            <li><a href="{% url 'About' %}"><i class="fa fa-chevron-right"></i> About Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="col-md-3 footer-col">
+          <h4>Contact Us</h4>
+          <div class="footer_contact">
+            <div class="contact_link_box">
+              <a href="https://maps.google.com/?q=PDEU+Gandhinagar" target="_blank">
+                <i class="fa fa-map-marker"></i>
+                <span>PDPU Road, Raisan,<br>Gandhinagar — 382355</span>
+              </a>
+              <a href="tel:+917575268495">
+                <i class="fa fa-phone"></i>
+                <span>+91 7575268495</span>
+              </a>
+              <a href="mailto:pdeubites@gmail.com">
+                <i class="fa fa-envelope"></i>
+                <span>pdeubites@gmail.com</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="col-md-3 footer-col">
+          <h4>Opening Hours</h4>
+          <div class="hours-row"><span>Mon – Fri</span><span>9AM – 11PM</span></div>
+          <div class="hours-row"><span>Saturday</span><span>10AM – 12AM</span></div>
+          <div class="hours-row"><span>Sunday</span><span>10AM – 11PM</span></div>
+          <div class="hours-row"><span>Holidays</span><span>Varies</span></div>
+          {% if is_restaurant_open %}
+          <div class="open-badge"><div class="open-dot"></div> Currently Open</div>
+          {% else %}
+          <div class="open-badge" style="background:rgba(220,53,69,0.1); border-color:rgba(220,53,69,0.3); color:#dc3545;">
+            <div class="open-dot" style="background:#dc3545; animation:none;"></div> Currently Closed
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+    <div class="footer-info">
+      <p>&copy; <span id="displayYear"></span> PDEU Bites. All Rights Reserved. Built with ❤️ by <a href="#">PDEUians</a></p>
+    </div>
+  </footer>
+  <!-- end footer -->
+
+  <!-- Scripts -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+  <script>
+    // ─── 1. ADD TO CART FUNCTION (The Missing Link) ───
+    function addToCart(itemId) {
+        fetch('/add-to-cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+
+            },
+            body: 'item_id=' + itemId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showToast('Added to cart! 🍔', 'success');
+                loadCart(); // Refresh the drawer automatically
+            } else {
+                showToast('Please login first!', 'error');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // ─── 2. LOAD CART DRAWER ───
+    function loadCart() {
+        fetch('/get-cart-items/')
+            .then(r => r.json())
+            .then(data => {
+                const list = document.getElementById('cart-items-list');
+                const totalBox = document.getElementById('cart-total');
+                list.innerHTML = '';
+                let total = 0;
+
+                if (data.items && data.items.length > 0) {
+                    data.items.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'cart-item-card';
+                        li.innerHTML = `
+                            <strong>${item.name}</strong>
+                            <div class="price-line">₹${item.price} × ${item.quantity} = <b>₹${item.total}</b></div>
+                            <div class="cart-qty-group">
+                                <button class="cq-btn inc" onclick="updateQty(${item.id}, 'inc')">+</button>
+                                <span style="min-width:20px;text-align:center;font-weight:700;">${item.quantity}</span>
+                                <button class="cq-btn dec" onclick="updateQty(${item.id}, 'dec')">−</button>
+                                <button class="cq-btn rem" onclick="removeItem(${item.id})">Remove</button>
+                            </div>`;
+                        list.appendChild(li);
+                    });
+                    
+                    let upsellHtml = '';
+                    if (data.subtotal < 500) {
+                        let diff = 500 - data.subtotal;
+                        if (diff <= 150) upsellHtml = `<div class="upsell-banner">Add ₹${diff} more to get ₹50 discount! 🎁</div>`;
+                    } else if (data.subtotal < 1000) {
+                        let diff = 1000 - data.subtotal;
+                        if (diff <= 250) upsellHtml = `<div class="upsell-banner">Add ₹${diff} more to get ₹150 discount! 🎊</div>`;
+                    }
+                    
+                    let summaryHtml = upsellHtml + `
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span style="font-size:0.85rem; color:#888;">Subtotal</span>
+                            <span style="font-size:0.95rem; font-weight:600;">₹${data.subtotal}</span>
+                        </div>`;
+                    
+                    if (data.discount > 0) {
+                        summaryHtml += `
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span style="font-size:0.85rem; color:#28a745;">Discount Applied ✨</span>
+                                <span style="font-size:0.95rem; font-weight:700; color:#28a745;">-₹${data.discount}</span>
+                            </div>`;
+                    }
+                    
+                    summaryHtml += `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="cart-total-label">Final Total</span>
+                            <span id="cart-total" style="font-size:1.35rem; font-weight:800; color:#1a1a2e;">₹${data.total}</span>
+                        </div>`;
+                        
+                    document.querySelector('.cart-footer').innerHTML = summaryHtml + '<button id="checkout-btn" class="mt-3">🔒 Proceed to Checkout</button>';
+                    
+                    // Re-bind checkout event
+                    document.getElementById('checkout-btn').addEventListener('click', function() {
+                        window.location.href = '/checkout/';
+                    });
+
+                } else {
+                    list.innerHTML = '<div class="cart-empty-msg"><i class="fa fa-shopping-cart"></i><p>Your cart is empty</p></div>';
+                    document.querySelector('.cart-footer').innerHTML = '<div class="text-center">₹0</div>';
+                }
+                document.getElementById('cart-drawer').classList.add('open');
+                document.getElementById('cart-overlay').classList.add('open');
+            });
+    }
+
+    // ─── 3. CHECKOUT REDIRECT ───
+    document.getElementById('checkout-btn')?.addEventListener('click', function() {
+    const total = document.getElementById('cart-total').textContent;
+    if (total === '₹0' || total === '') {
+        showToast('Your cart is empty!', 'error');
+        return;
+    }
+    closeCart();
+    showToast('Preparing your order...', 'success');
+    setTimeout(() => { window.location.href = '/checkout/'; }, 1000);
+});
+
+
+    // Helper functions
+    function closeCart() {
+        document.getElementById('cart-drawer').classList.remove('open');
+        document.getElementById('cart-overlay').classList.remove('open');
+    }
+    
+    function updateQty(id, action) {
+        fetch('/update-cart/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': '{{ csrf_token }}' },
+            body: `item_id=${id}&action=${action}`
+        }).then(loadCart);
+    }
+
+    function removeItem(id) {
+        fetch('/remove-from-cart/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': '{{ csrf_token }}' },
+            body: `item_id=${id}`
+        }).then(loadCart);
+    }
+    document.getElementById('cart-button')?.addEventListener('click', function () {
+    loadCart();
+});
+
+function showToast(msg, type='success') {
+  Toastify({
+    text: msg,
+    duration: 2000,
+    gravity: "top",
+    position: "right",
+    backgroundColor: type === 'success' ? "linear-gradient(to right, #00b09b, #96c93d)" : "#ff4d4d",
+    stopOnFocus: true
+  }).showToast();
+}
+
+// Header scroll effect
+window.addEventListener('scroll', function() {
+  const header = document.querySelector('.header_section');
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
+</script>
+</body>
+</html>

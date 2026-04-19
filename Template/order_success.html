@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load static %}
+{% block class %}class="sub_page"{% endblock class %}
+
+{% block main %}
+<style>
+  .success-page { background: linear-gradient(135deg,#f8f9fa,#fff); padding: 70px 0; }
+
+  /* Animated checkmark */
+  .checkmark-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg,#28a745,#20c997);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px; box-shadow: 0 8px 30px rgba(40,167,69,0.35);
+    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .checkmark-circle i { font-size: 2.6rem; color: #fff; }
+
+  .success-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.6rem; font-weight: 700; color: #1a1a2e;
+    animation: fadeUp 0.5s 0.2s both;
+  }
+  .success-subtitle {
+    color: #8892b0; font-size: 1rem; margin-bottom: 36px;
+    animation: fadeUp 0.5s 0.35s both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .order-card {
+    background: #fff; border-radius: 20px; max-width: 540px; margin: 0 auto;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08); overflow: hidden;
+    animation: fadeUp 0.5s 0.45s both;
+  }
+  .order-card-header {
+    background: linear-gradient(135deg,#1a1a2e,#16213e);
+    padding: 22px 28px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .order-card-header h5 { color: #ffbe33; font-weight: 800; margin: 0; font-size: 1.1rem; }
+  .order-card-header span { color: #ccd6f6; font-size: 0.85rem; }
+  .order-card-body { padding: 28px; }
+
+  .order-item-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #f0f4ff; font-size: 0.93rem;
+  }
+  .order-item-row:last-child { border-bottom: none; }
+  .order-item-row .item-name { color: #1a1a2e; font-weight: 600; }
+  .order-item-row .item-qty { color: #8892b0; font-size: 0.82rem; }
+  .order-item-row .item-price { font-weight: 700; color: #1a1a2e; }
+
+  .order-total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 28px; background: linear-gradient(135deg,#fffdf5,#fff8e7);
+    border-top: 2px solid #ffbe33;
+  }
+  .order-total-row span:first-child { font-weight: 700; color: #1a1a2e; font-size: 1rem; }
+  .order-total-row span:last-child { font-weight: 800; color: #28a745; font-size: 1.4rem; }
+
+  .meta-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid #f0f4ff; font-size: 0.88rem; color: #555;
+  }
+  .meta-row i { color: #ffbe33; margin-top: 2px; width: 16px; }
+  .meta-row:last-child { border-bottom: none; }
+
+  .email-notice {
+    background: linear-gradient(135deg,#e8f5e9,#f1f8e9); border-radius: 12px;
+    padding: 14px 18px; margin: 20px auto; max-width: 540px;
+    display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: #2e7d32;
+    animation: fadeUp 0.5s 0.55s both;
+  }
+  .email-notice i { font-size: 1.3rem; }
+
+  .action-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 30px; animation: fadeUp 0.5s 0.6s both; }
+  .btn-home {
+    background: linear-gradient(135deg,#ffbe33,#ff8c00); border: none; border-radius: 30px;
+    padding: 13px 32px; font-weight: 800; color: #1a1a2e; font-size: 0.97rem;
+    cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-home:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,190,51,0.4); color: #1a1a2e; }
+  .btn-menu {
+    background: transparent; border: 2px solid #1a1a2e; border-radius: 30px;
+    padding: 13px 32px; font-weight: 700; color: #1a1a2e; font-size: 0.97rem;
+    cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-menu:hover { background: #1a1a2e; color: #ffbe33; }
+
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(40,167,69,0.12); color: #28a745;
+    border: 1px solid rgba(40,167,69,0.3); border-radius: 20px;
+    padding: 5px 14px; font-size: 0.82rem; font-weight: 700;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #28a745;
+    animation: pulse 1.4s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+</style>
+
+<section class="success-page">
+  <div class="container text-center">
+
+    <div class="checkmark-circle">
+      <i class="fa fa-check"></i>
+    </div>
+
+    <div class="status-badge mb-3">
+      <div class="pulse-dot"></div> Order Placed
+    </div>
+
+    <h1 class="success-title">Order Placed Successfully! 🎉</h1>
+    <p class="success-subtitle">
+      Thank you, <strong style="color:#1a1a2e;">{{ order.name }}</strong>! Your order
+      <strong style="color:#ffbe33;">#{{ order.id }}</strong> has been received and is being prepared.
+    </p>
+
+    {% if order.email %}
+    <div class="email-notice">
+      <i class="fa fa-envelope"></i>
+      <span>A confirmation email has been sent to <strong>{{ order.email }}</strong></span>
+    </div>
+    {% endif %}
+
+    <div class="order-card">
+      <div class="order-card-header">
+        <h5><i class="fa fa-receipt mr-2"></i>Order #{{ order.id }}</h5>
+        <span>{{ order.created_at|date:"d M Y, H:i" }}</span>
+      </div>
+
+      <div class="order-card-body">
+        <h6 style="font-weight:700; color:#8892b0; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">Items Ordered</h6>
+        {% for item in order.items.all %}
+        <div class="order-item-row">
+          <div>
+            <div class="item-name">{{ item.item_name }}</div>
+            <div class="item-qty">Qty: {{ item.quantity }}</div>
+          </div>
+          <div class="item-price">₹{{ item.price }}</div>
+        </div>
+        {% endfor %}
+
+        <hr style="margin:16px 0;">
+        <h6 style="font-weight:700; color:#8892b0; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;">Delivery Info</h6>
+        <div class="meta-row">
+          <i class="fa fa-map-marker"></i>
+          <span>{{ order.address }}</span>
+        </div>
+        <div class="meta-row">
+          <i class="fa fa-phone"></i>
+          <span>{{ order.phone }}</span>
+        </div>
+        <div class="meta-row">
+          <i class="fa fa-credit-card"></i>
+          <span>Payment: <strong>{{ order.payment_method|upper }}</strong></span>
+        </div>
+        <div class="meta-row">
+          <i class="fa fa-clock-o"></i>
+          <span>Estimated delivery: <strong style="color:#28a745;">30 - 45 minutes</strong></span>
+        </div>
+      </div>
+
+      <div class="order-total-row">
+        <span>Total Amount</span>
+        <span>₹{{ order.total_amount }}</span>
+      </div>
+    </div>
+
+    <div class="action-btns">
+      <a href="{% url 'Home' %}" class="btn-home">
+        <i class="fa fa-home"></i> Back to Home
+      </a>
+      <a href="{% url 'Menu' %}" class="btn-menu">
+        <i class="fa fa-cutlery"></i> Order More
+      </a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

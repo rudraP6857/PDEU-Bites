@@ -157,9 +157,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use your email provider's SMTP server
 EMAIL_PORT = 587  # Standard port for TLS encryption
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'pdeubites@gmail.com'  # Replace with your email address
-EMAIL_HOST_PASSWORD = 'mlgl sinz cfzd ytay'  # Replace with your email password
-DEFAULT_FROM_EMAIL = 'pdeubites@gmail.com'  # The sender's email
+EMAIL_HOST_USER = 'Your mail address'  # Replace with your email address
+EMAIL_HOST_PASSWORD = 'Your 16 digit code'  # Replace with your email password
+DEFAULT_FROM_EMAIL = 'Your mail address'  # The sender's email
 
 # Retrieve the Google Maps API key from environment variables
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
